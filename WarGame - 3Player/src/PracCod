@@ -1,0 +1,103 @@
+    public void justMove() {
+        int deadFish = 0;
+        while(FishyPop > 0){
+            System.out.println("The number of fish is " + FishyPop);
+            System.out.println("The number of bears is " + bearPop);
+            for (int y = 0; y < height; y++) {
+
+
+                for (int x = 0; x < length; x++) {
+                    if (River[x][y] != null) {
+                        int newX = ran.nextInt(3) - 1;
+                        int newY = ran.nextInt(3) - 1;
+                        int xSum = x + newX;
+                        int ySum = y + newY;
+                        if(xSum < 0){
+                            xSum = 0;
+                        }
+                        if (ySum < 0){
+                            ySum = 0;
+                        }
+                        if (xSum + newX <0){
+                            xSum = 0;
+                            newX = 0;
+                        }
+                        if (ySum + newY <0){
+                            ySum = 0;
+                            newY = 0;
+                        }
+                        int xOry = ran.nextInt(2);
+                        //0 = x movement
+                        if ((xOry == 0) && (xSum < length))
+                        {
+                            //Animal moves
+                            if((River[xSum+newX][y] == null) && (River[xSum][y] == null))
+                            {
+                                River[xSum][y]=River[x][y];
+                                River[x][y] = null;
+                            }
+                            //Fish is born
+                            if(River[xSum+newX][y] != null){
+                                if ((River[x][y].getClass().getName().equals("Fishy")) && (River[x+newX][y].getClass().getName().equals("Fishy")) && (River[x][y] != null) && (River[x+newX][y] != null)){
+                                    FishyPop +=1;
+                                    River[xSum][y] = new Fishy();
+
+                                }
+                                if((River[x][y].getClass().getName().equals("Bear")) && (River[xSum+newX][y].getClass().getName().equals("Bear"))){
+                                    bearPop += 1;
+                                    River[xSum][y] = new Bear();
+                                }
+                            }else if((River[xSum][y].getClass() != River[x][y].getClass()) && (River[xSum][y] != null) && (River[x][y] != null)){
+                                if ((River[x][y].getClass().getName().equals("Fishy")) && (River[xSum][y].getClass().getName().equals("Bear"))){
+                                    River[x][y] = null;
+                                    FishyPop -= 1;
+                                    deadFish += 1;
+
+
+                                }
+                                River[xSum][y]=River[x][y];
+                                River[x][y] = null;
+                            }
+                        //xOry = 1 is y movement
+                        } else if ((xOry == 1) && (ySum < height)) {
+
+                            if(River[x][ySum] == null)
+                            {
+                                River[x][ySum]=River[x][y];
+                                River[x][y] = null;
+                            }
+                            //Bear is born
+                            else if(River[x][ySum].getClass().equals(Animal.class)){
+                                if ((River[x][y].getClass().getName().equals("Bear")) && (River[x][ySum+newY].getClass().getName().equals("Bear"))){
+                                    bearPop +=1;
+                                    River[x][ySum] = new Bear();
+                                    bearPop += 1;
+
+                                }
+                                if((River[x][y].getClass().getName().equals("Bear")) && (River[x][ySum].getClass().getName().equals("Fish"))){
+                                    River[x][ySum] = null;
+                                    River[x][ySum] = River[x][y];
+                                    River[x][y]=null;
+                                    FishyPop -= 1;
+                                    deadFish += 1;
+                            }if((River[x][y].getClass().getName().equals("Fish")) && (River[x][ySum+newY].getClass().getName().equals("Bear"))){
+                                    FishyPop += 1;
+                                    River[xSum][y] = new Fishy();
+                                }
+
+                            }
+
+                        }
+
+
+                    }
+
+                }
+
+            }
+
+        }
+
+
+
+    }
